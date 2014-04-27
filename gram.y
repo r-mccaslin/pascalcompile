@@ -979,7 +979,12 @@ rts_proc_parlist:
 statement_extensions:
     return_statement  {}
   | continue_statement  {}
-  | break_statement  {}
+  | break_statement  { if (is_exit_label() == FALSE) { //loop does not exist
+                          error("Break statement not inside loop");                       }
+                       else { //exits closest surrounding loop
+                          b_jump(current_exit_label());
+                       }
+                     }
   ;
 
 return_statement:
